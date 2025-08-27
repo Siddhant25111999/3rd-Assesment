@@ -1,0 +1,11 @@
+<%- include('layout', { body: '' }) %>
+
+<h1>Dashboard</h1>
+<p>Hello <%= user.username %>!</p>
+
+<a href="/blogs">View Blogs</a> |
+<a href="/blogs/create">Create Blog</a>
+
+<% if (user.role === "admin") { %>
+  | <a href="/users">Manage Users</a>
+<% } %>

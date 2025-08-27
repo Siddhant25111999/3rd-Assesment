@@ -1,0 +1,13 @@
+<%- include('layout', { body: '' }) %>
+
+<h2>User Management</h2>
+<ul>
+  <% users.forEach(u => { %>
+    <li>
+      <%= u.username %> - <%= u.email %>
+      <form action="/api/users/<%= u._id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>

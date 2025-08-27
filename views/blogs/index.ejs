@@ -1,0 +1,12 @@
+<%- include('../layout', { body: '' }) %>
+
+<h2>All Blogs</h2>
+<a href="/blogs/create">Create New Blog</a>
+<ul>
+  <% blogs.forEach(b => { %>
+    <li>
+      <a href="/blogs/<%= b._id %>"><%= b.title %></a>
+      by <%= b.author.username %>
+    </li>
+  <% }) %>
+</ul>

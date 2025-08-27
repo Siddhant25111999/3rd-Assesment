@@ -1,0 +1,8 @@
+<%- include('../layout', { body: '' }) %>
+
+<h2><%= blog.title %></h2>
+<p><%= blog.content %></p>
+<p>Author: <%= blog.author.username %></p>
+<% if (blog.image) { %>
+  <img src="<%= blog.image %>" width="200"/>
+<% } %>

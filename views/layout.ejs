@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blog & User Management</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <% if (success && success.length > 0) { %>
+    <div style="color: green;"><%= success %></div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div style="color: red;"><%= error %></div>
+  <% } %>
+
+  <% if (user) { %>
+    <p>Welcome, <%= user.username %> | <a href="/logout">Logout</a></p>
+  <% } else { %>
+    <p><a href="/login">Login</a> | <a href="/register">Register</a></p>
+  <% } %>
+
+  <%- body %>
+</body>
+</html>

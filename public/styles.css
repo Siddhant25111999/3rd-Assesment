@@ -1,0 +1,84 @@
+/* Reset some defaults */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f5f6fa;
+  color: #2c3e50;
+}
+
+h1, h2 {
+  color: #34495e;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Layout */
+nav {
+  background: #2c3e50;
+  color: white;
+  padding: 10px;
+}
+nav a {
+  color: white;
+  margin-right: 10px;
+}
+
+/* Flash messages */
+div[style*="color: green"] {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+div[style*="color: red"] {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+/* Forms */
+form {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+input, textarea, button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 14px;
+}
+button {
+  background: #2980b9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background: #1f6391;
+}
+
+/* Blog list */
+ul {
+  list-style: none;
+  padding: 0;
+}
+ul li {
+  background: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
