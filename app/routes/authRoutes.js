@@ -18,44 +18,29 @@ router.get("/login", (req, res) => {
   });
 });
 
-// ----------------- REGISTER (API) -----------------
-// router.post("/register", async (req, res) => {
-//   try {
-//     const { username, email, password } = req.body;
-
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(400).json({ error: "Email already registered" });
-//     }
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     const user = new User({ username, email, password: hashedPassword });
-//     await user.save();
-
-//     res.status(201).json({ message: "Registered successfully", user: { id: user._id, email: user.email } });
-//   } catch (err) {
-//     console.error("Register Error:", err);
-//     res.status(500).json({ error: "Registration failed" });
-//   }
-// });
+// ----------------- REGISTER (POST) -----------------
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    let { username, email, password } = req.body;
 
+    // Normalize email
+    email = email.toLowerCase();
+
+    // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       req.flash("error", "Email already registered");
       return res.redirect("/register");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({ username, email, password: hashedPassword });
+    // Save user (password will be hashed automatically via pre-save hook)
+    const user = new User({ username, email, password });
     await user.save();
 
+    console.log("Registered User:", user);
+
     req.flash("success", "Registered successfully, please login");
-    res.redirect("/login"); // 🔹 Redirect to login page
+    res.redirect("/login");
   } catch (err) {
     console.error("Register Error:", err);
     req.flash("error", "Registration failed");
@@ -63,50 +48,52 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-// ----------------- LOGIN (API) -----------------
-// router.post("/login", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(400).json({ error: "Invalid credentials" });
-
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
-
-//     req.session.user = user;
-//     res.json({ message: `Welcome back, ${user.username}!`, user: { id: user._id, email: user.email } });
-//   } catch (err) {
-//     console.error("Login Error:", err);
-//     res.status(500).json({ error: "Login failed" });
-//   }
-// });
+// ----------------- LOGIN (POST) -----------------
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) {
-    req.flash("error", "Invalid credentials");
-    return res.redirect("/login");
+  try {
+    let { email, password } = req.body;
+
+    // Normalize email
+    email = email.toLowerCase();
+
+    // Find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log("Login failed: User not found");
+      req.flash("error", "Invalid credentials");
+      return res.redirect("/login");
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match:", isMatch);
+    if (!isMatch) {
+      req.flash("error", "Invalid credentials");
+      return res.redirect("/login");
+    }
+
+    // Save session
+    req.session.user = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    };
+
+    console.log("Login success:", req.session.user);
+    req.flash("success", `Welcome back, ${user.username}!`);
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.error("Login Error:", err);
+    req.flash("error", "Login failed");
+    res.redirect("/login");
   }
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    req.flash("error", "Invalid credentials");
-    return res.redirect("/login");
-  }
-  req.session.user = user;
-  req.flash("success", `Welcome back, ${user.username}!`);
-  res.redirect("/dashboard");
 });
-
-
 
 // ----------------- LOGOUT -----------------
 router.get("/logout", (req, res) => {
   req.session.destroy(() => {
-    // If browser → redirect
     if (!req.originalUrl.startsWith("/api")) return res.redirect("/login");
-    // If API → return JSON
     res.json({ message: "Logged out successfully" });
   });
 });
